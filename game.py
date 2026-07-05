@@ -5,8 +5,7 @@ py.init()
 mixer.init()
 
     # screen setup
-SCREEN_WIDTH = 900
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH, SCREEN_HEIGHT = 900, 600
 screen = py.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 py.display.set_caption('UNNAMED')
 
@@ -21,6 +20,7 @@ clock = py.time.Clock()
 
 border_img = py.image.load("assets/gamebackground.png").convert_alpha()
 player_img = py.image.load("assets/player.png").convert_alpha()
+player_bullet_img = py.image.load("assets/player_bullet.png").convert_alpha()
 
 player = py.Rect(290, 290, 14, 14)
 
@@ -29,15 +29,33 @@ player_x = player.x
 player_y = player.y
 player_width = 14
 
+player_bullets = []
+player_bullet_reload = 0.5
+player_bullet_width = 6
+player_bullet_height = 16
+player_bullet_speed = 550
+
+# mixer.music.load("assets/Ready.mp3")
 mixer.music.load("assets/Skyrider.mp3")
 mixer.music.set_volume(0.6)
 mixer.music.play()
 
 previous_time = time.time()
 
+def draw_player():
+    global player
+    player = py.Rect(player.x, player.y, 14, 14)
+    screen.blit(player_img, (player.x, player.y))
+
+def draw_player_bullets():
+    for _ in player_bullets:
+        py.Rect(b[0], b[1], 6, 16)
+        screen.blit(player_bullet_img, (b[0], b[1]))
+
     # game loop
 flag = True
 while flag:
+    # clock.tick(30)
     dt = time.time() - previous_time
     previous_time = time.time()
 
@@ -70,9 +88,25 @@ while flag:
         player_speed = 283
     else:
         player_speed = 400
+    if keys[py.K_SPACE] and player_bullet_reload <= 0:
+        player_bullet_reload = 0.5
+        player_bullet_x = player.x + player_width / 2 - player_bullet_width / 2
+        player_bullet_y = player.y - 5
+        player_bullets.append([player_bullet_x, player_bullet_y])
+
+    if player_bullet_reload > -1:
+        player_bullet_reload -= 1 * dt
 
     screen.fill(BACKGROUND_COLOR)
-    screen.blit(border_img, (0, 0))
+
+    for b in player_bullets:
+        b[1] -= player_bullet_speed * dt
+    player_bullets = [b for b in player_bullets if b[1] > 0]
+
+    draw_player_bullets()
+    draw_player()
+
+    screen.blit(border_img, (0, 0)) # Keep this rendering last.
 
     # \/ debug \/
     debug_text = font.render(f"debug:   x {player.x}   y {player.y}   |   {player_speed}", True, FONT_COLOR)
@@ -87,9 +121,6 @@ while flag:
     debug_bottom = font.render(f"{player.bottom}", True, FONT_COLOR)
     screen.blit(debug_bottom, (660, 100))
     # /\ end debug /\
-
-    player = py.Rect(player.x, player.y, 14, 14)
-    screen.blit(player_img, (player.x, player.y))
 
     py.display.flip()
 
