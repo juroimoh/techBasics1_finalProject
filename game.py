@@ -19,8 +19,8 @@ FONT_COLOR = (214, 255, 255)
     # setup
 clock = py.time.Clock()
 
-border_img = py.image.load("gamebackground.png").convert_alpha()
-player_img = py.image.load("player.png").convert_alpha()
+border_img = py.image.load("assets/gamebackground.png").convert_alpha()
+player_img = py.image.load("assets/player.png").convert_alpha()
 
 player = py.Rect(290, 290, 14, 14)
 
@@ -29,7 +29,7 @@ player_x = player.x
 player_y = player.y
 player_width = 14
 
-mixer.music.load("Ready.mp3")
+mixer.music.load("assets/Ready.mp3")
 mixer.music.set_volume(0.6)
 mixer.music.play()
 
