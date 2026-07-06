@@ -26,7 +26,8 @@ player_bullet_img = py.image.load("assets/player_bullet.png").convert_alpha()
 
 player = py.Rect(290, 290, 14, 14)
 
-player_speed = 400
+BASE_SPEED = 300
+player_speed = BASE_SPEED
 player_x = player.x
 player_y = player.y
 player_width = 14
@@ -95,9 +96,9 @@ while flag:
         if player.bottom > 550:
             player.y = 550 - player_width
     if keys[py.K_RIGHT] and keys[py.K_UP] or keys[py.K_RIGHT] and keys[py.K_DOWN] or keys[py.K_LEFT] and keys[py.K_UP] or keys[py.K_LEFT] and keys[py.K_DOWN]:
-        player_speed = 283
+        player_speed = round(BASE_SPEED * 0.707)
     else:
-        player_speed = 400
+        player_speed = BASE_SPEED
     if keys[py.K_SPACE] and player_bullet_reload <= 0:
         player_bullet_reload = 0.15
         player_bullet_x = player.x + player_width / 2 - player_bullet_width / 2
@@ -133,7 +134,7 @@ while flag:
 
     # \/ debug \/
     if DEBUG:
-        debug_text = font.render(f"debug:   x {player.x}   y {player.y}   |   {player_speed}, {len(player_bullets)}", True, FONT_COLOR)
+        debug_text = font.render(f"debug:   x {player.x}   y {player.y}   |   {player_speed}, {len(player_bullets)}x3", True, FONT_COLOR)
         screen.blit(debug_text, (10, 10))
 
         debug_top = font.render(f"{player.top}", True, FONT_COLOR)
