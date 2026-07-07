@@ -14,13 +14,14 @@ font = py.font.SysFont("Arial", 28)
 border_img = py.image.load("assets/gamebackground.png").convert_alpha()
 player_img = py.image.load("assets/player.png").convert_alpha()
 player_bullet_img = py.image.load("assets/player_bullet.png").convert_alpha()
+cover_idea_img = py.image.load("assets/dangan_cover_idea.png").convert_alpha()
 
     # colors
 BACKGROUND_COLOR = (16, 15, 22)
 FONT_COLOR = (214, 255, 255)
 
     # miscellaneous
-DEBUG = False
+DEBUG = True
 BASE_SPEED = 300
 
 previous_time = time.time()
@@ -40,7 +41,7 @@ class Game:
         global dt, previous_time
         flag = True
         while flag:
-            # clock.tick(30)
+            # self.clock.tick(30)
             dt = time.time() - previous_time
             previous_time = time.time()
 
@@ -135,6 +136,8 @@ class LevelOne:
             self.player_bullets.append([player_bullet_x, player_bullet_y])
             self.player_bulletsl.append([player_bullet_x, player_bullet_y])
             self.player_bulletsr.append([player_bullet_x, player_bullet_y])
+        if keys[py.K_ESCAPE]:
+            self.gameStateManager.set_state('menu')
 
         if self.player_bullet_reload > -1:
             self.player_bullet_reload -= 1 * dt
@@ -184,7 +187,7 @@ class Menu:
         self.display = display
         self.gameStateManager = gameStateManager
     def run(self):
-        self.display.fill('purple')
+        self.display.blit(cover_idea_img, (0, 0))
 
 class GameStateManager:
     def __init__(self, currentState):
